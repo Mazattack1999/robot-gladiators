@@ -93,62 +93,67 @@ var endGame = function() {
 
  var fight = function(enemy) {
     while(playerInfo.health > 0  && enemy.health > 0){
-        //window.alert("Welcome to Robot Gladiators!");
-        var promptFight = window.prompt("Would you like ot FIGHT OR SKIP this battle? Enter 'FIGHT' or 'SKIP' to choose.");
-        console.log(promptFight);
-        // var promptFight = "fight";
-
-        if (promptFight === "skip" || promptFight === "SKIP") {
-            // confirm player wants to skip
-            var confirmSkip = window.confirm("Are you sure you's like to quit?");
-
-
-            // if yes (true), leave fight
-            if(confirmSkip) {
-                console.log(playerInfo.name + " has chosen to skip the fight!");
-                // subtract money from playerInfo.money fo skipping
-                playerInfo.money = Math.max(0, playerInfo.money - 10);
-                console.log("playerInfo.money " + playerInfo.money);
-                window.alert("playerInfo.money " + playerInfo.money);
-                break;
-                // if no (false), ask question again by running fight() again
-            }
+        if (fightOrSkip()) {
+            // if true, leave fight by breaking loop
+            break;
         }
 
-        // if player choses to fight, then fight
-        if (promptFight === "fight" || promptFight === "FIGHT") {
-
-            // generate random damage value based on player's attack power
-            var damage = randomNumber(playerInfo.attack - 3, playerInfo.attack);
-            enemy.health = Math.max(0, enemy.health - damage);
+        // generate random damage value based on player's attack power
+        var damage = randomNumber(playerInfo.attack - 3, playerInfo.attack);
+        enemy.health = Math.max(0, enemy.health - damage);
     
         // check enemy's health
-            if (enemy.health <= 0) {
-                window.alert(enemy.name + " has died!");
-                console.log(enemy.name + " has died!");
-                break;
-            }else {
-                console.log(enemy.name + " still has " + enemy.health + " health left.");
-                window.alert(enemy.name + " still has " + enemy.health + " health left.");
-            }
+        if (enemy.health <= 0) {
+            window.alert(enemy.name + " has died!");
+            console.log(enemy.name + " has died!");
+            break;
+        }else {
+            console.log(enemy.name + " still has " + enemy.health + " health left.");
+             window.alert(enemy.name + " still has " + enemy.health + " health left.");
+        }
     
-            // generate random damage value based on enemy's attack power
-            var damage = randomNumber(enemy.attack - 3, enemy.attack);
-            playerInfo.health = Math.max(0, playerInfo.health - damage);
+        // generate random damage value based on enemy's attack power
+        var damage = randomNumber(enemy.attack - 3, enemy.attack);
+        playerInfo.health = Math.max(0, playerInfo.health - damage);
     
-            // check player's health
-            if (playerInfo.health <= 0) {
-                console.log(playerInfo.name + " has died!");
-                window.alert(playerInfo.name + " has died!");
-                break;
-            }else {
-                console.log(playerInfo.name + " still has " + playerInfo.health + " health left.");
-                window.alert(playerInfo.name + " still has " + playerInfo.health + " health left.");
-            }
-        } else {
-            window.alert("You need to choose a valid option. Try again!");
+        // check player's health
+        if (playerInfo.health <= 0) {
+            console.log(playerInfo.name + " has died!");
+            window.alert(playerInfo.name + " has died!");
+            break;
+        }else {
+            console.log(playerInfo.name + " still has " + playerInfo.health + " health left.");
+            window.alert(playerInfo.name + " still has " + playerInfo.health + " health left.");
         }
     } 
+}
+
+var fightOrSkip = function(){
+    // ask player if they'd like ot fight or skip using fightOrSkip function
+    var promptFight = window.prompt('Would you like to FIGHT or SKIP this battle? Enter "FIGHT" or "SKIP" to choose.');
+    promptFight = promptFight.toLowerCase();
+
+    if (!(promptFight === "fight" || promptFight === "skip")) {
+        window.alert("You need to provide a valid answer! Please try again.");
+        return fightOrSkip();
+    }
+
+    if (promptFight === "skip") {
+        // confirm player wants to skip
+        var confirmSkip = window.confirm("Are you sure you's like to quit?");
+
+        // if yes (true), leave fight
+        if(confirmSkip) {
+            console.log(playerInfo.name + " has chosen to skip the fight!");
+            window.alert(playerInfo.name + " has decided to skip this fight. Goodbye!");
+            // subtract money from playerInfo.money fo skipping
+            playerInfo.money = Math.max(0, playerInfo.money - 10);
+            
+            // return true if player wants to leave
+            return true;
+        }  
+        return false;
+    }
 }
 
 var randomNumber = function(min, max) {
@@ -156,6 +161,7 @@ var randomNumber = function(min, max) {
 
     return value;
 }
+
 
 
 var playerInfo = {
